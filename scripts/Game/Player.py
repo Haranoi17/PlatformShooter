@@ -1,4 +1,4 @@
-import pygame, sys
+import pygame
 import math
 import random
 from pygame.locals import *
@@ -73,16 +73,3 @@ class Player:
         self.move()
         self.draw()
 
-P = Player(3, 50)
-
-pause()
-
-while True:
-    
-    screen.fill(255,255,255)
-    events()
-    P.do()
-
-    pygame.display.update()
-    pygame.display.flip()
-    
