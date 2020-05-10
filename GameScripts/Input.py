@@ -50,4 +50,4 @@ class Input:
                     cls.right = False
 
                 if event.key == pygame.K_SPACE:
-                    cls.space = False;
+                    cls.space = False
