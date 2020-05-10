@@ -1,15 +1,15 @@
 import pygame
 from GameScripts.Input import Input
-
+from GameScripts.Vector import Vector
 
 class Window:
     def __init__(self):
         self.opened = True
         self.background_color = (255, 255, 255)
-        self.size = (600, 400)
+        self.size = Vector(600, 400)
         self.display = pygame.display
-        self.surface = self.display.set_mode(self.size)
-        
+        self.surface = self.display.set_mode((self.size.x, self.size.y))
+
     def draw(self, image, pos):
         self.surface.blit(image, (pos.x, pos.y))
 

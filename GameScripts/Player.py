@@ -13,16 +13,16 @@ class Player(Collidable):
     def move(self, deltaTime):
         moveDir = Vector()
 
-        if Input.left:
+        if Input.left and not self.collisionInfo["Left"]:
             moveDir = moveDir + Vector(-1, 0)
 
-        if Input.right:
+        if Input.right and not self.collisionInfo["Right"]:
             moveDir = moveDir + Vector(1, 0)
 
-        if Input.up:
+        if Input.up and not self.collisionInfo["Top"]:
             moveDir = moveDir + Vector(0, -1)
 
-        if Input.down:
+        if Input.down and not self.collisionInfo["Bottom"]:
             moveDir = moveDir + Vector(0, 1)
 
         if Input.space:
