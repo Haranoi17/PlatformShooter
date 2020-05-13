@@ -38,3 +38,5 @@ while window.isOpen():
     window.update()
     Collidable.resetCollisions()
     #print("w:{} s:{} a:{} d:{}".format(Input.up, Input.down, Input.left, Input.right))
+
+#arek chuj
