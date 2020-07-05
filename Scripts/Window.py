@@ -1,12 +1,12 @@
 import pygame
-from GameScripts.Input import Input
-from GameScripts.Vector import Vector
+from Scripts.Input import Input
+from Scripts.Vector import Vector
 
 class Window:
     def __init__(self):
         self.opened = True
         self.background_color = (255, 255, 255)
-        self.size = Vector(600, 400)
+        self.size = Vector(1280, 720)
         self.display = pygame.display
         self.surface = self.display.set_mode((self.size.x, self.size.y))
 
@@ -24,5 +24,5 @@ class Window:
         self.opened = False
 
     def inputBehaviour(self):
-        if Input.Esc == True:
+        if Input.Esc:
             self.opened = False

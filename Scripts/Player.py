@@ -1,6 +1,7 @@
-from GameScripts.Vector import *
-from GameScripts.CollisionSystem import *
-from GameScripts.Input import *
+from Scripts.Vector import Vector
+from Scripts.CollisionSystem import Collidable
+from Scripts.Input import Input
+
 
 class Player(Collidable):
     def __init__(self):

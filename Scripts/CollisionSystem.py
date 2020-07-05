@@ -1,4 +1,4 @@
-from GameScripts.Vector import Vector
+from Scripts.Vector import Vector
 
 
 class Collidable:
@@ -28,7 +28,8 @@ class Collidable:
 
     # Checks if collision occured and sends information which side has collided
     def _collisionCheck(self, other):
-        if ((other.left < self.right < other.right) or (other.left < self.left < other.right)) and ((other.bottom < self.top < other.top) or (other.bottom < self.bottom < other.top)):
+        if ((other.left < self.right < other.right) or (other.left < self.left < other.right)) and (
+                (other.bottom < self.top < other.top) or (other.bottom < self.bottom < other.top)):
             if other.left < self.right < other.right:
                 self.collisionInfo["Right"] = True
 
@@ -48,7 +49,7 @@ class Collidable:
 
     @classmethod
     # This method iterates through all collidable objects and check for collision
-    def distributeCollisios(cls):
+    def checkAllCollisios(cls):
         for i in range(len(cls.collidables) - 1):
             for j in range(i + 1, len(cls.collidables)):
                 cls.collidables[i]._collisionCheck(cls.collidables[j])
