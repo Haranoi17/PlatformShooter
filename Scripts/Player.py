@@ -1,17 +1,25 @@
 from Scripts.Vector import Vector
 from Scripts.CollisionSystem import Collidable
 from Scripts.Input import Input
+from Scripts.Entity import Entity
 
 
-class Player(Collidable):
+class Player(Entity, Collidable):
     def __init__(self):
-        self.speed = 1.0
-        self.pos = Vector()
-        self.jumping = False
-        self.falling = True
-        Collidable.__init__(self)
+        Entity.__init__(self)
+        self.loadImage("./resources/character.png")
+        Collidable.__init__(self, box=Vector(self.width, self.height))
 
-    def move(self, deltaTime):
+
+    #def move(self, deltaTime, moveDir): base entity function is good enough
+
+    def update(self, deltaTime):
+        self.updateCollidable(self.pos)
+        moveDir = self._calculateMoveDirection()
+        self.move(deltaTime, moveDir)
+
+    def _calculateMoveDirection(self):
+        # Returns normalized move direction vector according to buttons pressed
         moveDir = Vector()
 
         if Input.left and not self.collisionInfo["Left"]:
@@ -32,11 +40,4 @@ class Player(Collidable):
         else:
             self.jumping = False
 
-        moveDir = moveDir.normalized()
-
-        self.pos = self.pos + moveDir
-
-    def update(self, deltaTime):
-        self.updateCollidable(self.pos)
-        self.move(deltaTime)
-        # self.draw()
+        return moveDir.normalized()
