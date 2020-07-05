@@ -28,30 +28,21 @@ class Collidable:
 
     # Checks if collision occured and sends information which side has collided
     def _collisionCheck(self, other):
-        # if ((other.left < self.right < other.right) or (other.left < self.left < other.right)) and (
-        #         (other.bottom < self.top < other.top) or (other.bottom < self.bottom < other.top)):
-        #     if other.top < self.bottom < other.bottom:
-        #         self.collisionInfo["Bottom"] = True
-        #
-        #     if other.top < self.top < other.bottom:
-        #         self.collisionInfo["Top"] = True
-        #
-        #     if other.left < self.right < other.right:
-        #         self.collisionInfo["Right"] = True
-        #
-        #     if other.left < self.left < other.right:
-        #         self.collisionInfo["Left"] = True
-        if other.top < self.bottom < other.bottom:
-            self.collisionInfo["Bottom"] = True
 
-        if other.bottom < self.top < other.top:
-            self.collisionInfo["Top"] = True
+        if ((other.left < self.right < other.right) or (other.left < self.left < other.right)) and (
+                (other.bottom > self.top > other.top) or (other.bottom > self.bottom > other.top)):
 
-        if other.left < self.right < other.right:
-            self.collisionInfo["Right"] = True
+            if other.top < self.bottom < other.bottom:
+                self.collisionInfo["Bottom"] = True
 
-        if other.left < self.left < other.right:
-            self.collisionInfo["Left"] = True
+            if other.bottom > self.top > other.top:
+                self.collisionInfo["Top"] = True
+
+            if other.left < self.right < other.right:
+                self.collisionInfo["Right"] = True
+
+            if other.left < self.left < other.right:
+                self.collisionInfo["Left"] = True
 
     # public functions to use
     def updateCollidable(self, pos):

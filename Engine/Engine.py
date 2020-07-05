@@ -7,6 +7,8 @@ from Scripts.Platform import Platform
 
 import pygame
 import os
+import random
+
 
 
 class Engine:
@@ -14,19 +16,21 @@ class Engine:
         pygame.init()
         self.window = Window()
         self.player = Player()
-        self.platform = Platform(Vector(800,300))
+        self.platforms = []
+        self.gravity = 0.000002
         self.startTime = 0.0
         self.stopTime = pygame.time.get_ticks()
         self.deltaTime = self.stopTime - self.startTime
+        self.buildPlatforms()
 
     def runGame(self):
         while self.window.isOpen():
             self.startTime = pygame.time.get_ticks()
 
+            self.debugLog()
             self._serveInput()
             self._updateLogic()
             self._draw()
-            print(f"{self.player.collisionInfo}")
 
             self.stopTime = pygame.time.get_ticks()
             self._deltaTime()
@@ -37,16 +41,23 @@ class Engine:
     def _updateLogic(self):
         Collidable.resetCollisions()
         Collidable.checkAllCollisions()
-        self.player.update(self.deltaTime)
-        self.platform.update()
+        self.player.update(self.deltaTime, self.gravity)
         self.window.update()
 
     def _draw(self):
         self.window.surface.fill((0, 0, 0))
         self.window.drawEntity(self.player)
-        self.window.drawObject(self.platform)
         self.window.drawHitBox(self.player)
-        self.window.drawHitBox(self.platform)
+
+        for platform in self.platforms:
+            self.window.drawObject(platform)
 
     def _deltaTime(self):
         self.deltaTime = self.stopTime - self.startTime
+
+    def buildPlatforms(self):
+        for i in range(10):
+            self.platforms.append(Platform(Vector(random.random()*1000, random.random()*500)))
+
+    def debugLog(self):
+        print(f"{self.player.collisionInfo} {self.player.jumpTime}")

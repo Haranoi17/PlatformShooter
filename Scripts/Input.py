@@ -29,10 +29,10 @@ class Input:
 
                 if event.key == pygame.K_a:
                     cls.left = True
-                    cls.right = False
+
                 if event.key == pygame.K_d:
                     cls.right = True
-                    cls.Left = False
+
                 if event.key == pygame.K_SPACE:
                     cls.space = True
 

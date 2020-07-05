@@ -16,7 +16,7 @@ class Entity:
         # Changes entities position
         self.pos = self.pos + moveDir * deltaTime * self.speed
 
-    def update(self, deltaTime):
+    def update(self, deltaTime, gravity):
         pass
 
     def loadImage(self, path):
