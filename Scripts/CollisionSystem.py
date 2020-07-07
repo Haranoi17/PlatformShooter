@@ -21,14 +21,19 @@ class Collidable:
         self.pos = pos
 
     def _updateSides(self):
-        self.left = self.pos.x - self.box.x/2
-        self.right = self.pos.x + self.box.x/2
-        self.top = self.pos.y - self.box.y/2
-        self.bottom = self.pos.y + self.box.y/2
+        self.left = self.pos.x - self.box.x / 2
+        self.right = self.pos.x + self.box.x / 2
+        self.top = self.pos.y - self.box.y / 2
+        self.bottom = self.pos.y + self.box.y / 2
+
+    def _collisionBehaviourDependingOnTypesOfObjects(self, other):
+        """This function is called in _collisionCheck() and will be overloaded
+        if additional behaviour is needed in derived classes"""
+        pass
 
     # Checks if collision occured and sends information which side has collided
     def _collisionCheck(self, other):
-
+        # TODO: it doesnt work properly repair this
         if ((other.left < self.right < other.right) or (other.left < self.left < other.right)) and (
                 (other.bottom > self.top > other.top) or (other.bottom > self.bottom > other.top)):
 
@@ -43,6 +48,8 @@ class Collidable:
 
             if other.left < self.left < other.right:
                 self.collisionInfo["Left"] = True
+
+            self._collisionBehaviourDependingOnTypesOfObjects(other)
 
     # public functions to use
     def updateCollidable(self, pos):
