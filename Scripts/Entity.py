@@ -9,6 +9,7 @@ class Entity:
         self.healthPoints = 100
         self.speed = 0.5
         self.pos = Vector()
+        self.imageOffset = Vector()
         self.width = 0
         self.height = 0
         self.image = None

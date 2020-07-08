@@ -56,7 +56,7 @@ class Engine:
 
     def _draw(self):
         self.window.surface.fill((0, 0, 0))
-        self.window.drawEntity(self.player)
+        self.window.drawAnimated(self.player)
         self.window.drawHitBox(self.player)
 
         for bullet in Bullet.bullets:

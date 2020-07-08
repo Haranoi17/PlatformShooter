@@ -1,7 +1,7 @@
 import pygame
 from Scripts.Input import Input
 from Scripts.Vector import Vector
-
+from Scripts.Animation import Animation
 
 class Window:
     def __init__(self):
@@ -23,6 +23,11 @@ class Window:
         x = Object.pos.x - Object.width / 2
         y = Object.pos.y - Object.height / 2
         self.surface.blit(Object.image, (x, y))
+
+    def drawAnimated(self, animationEntityDerived):
+        x = animationEntityDerived.pos.x - animationEntityDerived.width / 2
+        y = animationEntityDerived.pos.y - animationEntityDerived.height / 2
+        self.surface.blit(animationEntityDerived.currentImage, (x + animationEntityDerived.imageOffset.x, y + animationEntityDerived.imageOffset.y))
 
     def drawText(self, text, pos=Vector()):
         label = self.font.render(str(text), 1, (0, 255, 0))

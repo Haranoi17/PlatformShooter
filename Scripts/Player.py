@@ -5,15 +5,20 @@ from Scripts.Entity import Entity
 from Scripts.Platform import Platform
 from Scripts.Gun import Gun
 from Scripts.Bullet import Bullet
+from Scripts.Animation import Animation
+import random
 import math
 import pygame
 
 
-class Player(Entity, Collidable):
+class Player(Entity, Collidable, Animation):
     def __init__(self):
         Entity.__init__(self)
-        self.loadImage("./resources/PNG/Knight/knight.png")
-        Collidable.__init__(self, box=Vector(self.width, self.height))
+        self.imageOffset = Vector(20, -20)
+        Animation.__init__(self, "./resources/Animations/Knight/", 300)
+        self.width = self.getImageSize().x
+        self.height = self.getImageSize().y
+        Collidable.__init__(self, box=Vector(self.width-90, self.height-70))
         self.jumpTime = 0
         self.jumping = False
         self.falling = True
@@ -34,6 +39,9 @@ class Player(Entity, Collidable):
         self._fall(deltaTime, gravity)
         self._isFalling()
         self._isRising()
+        self.animate()
+        if Input.mouseRight:
+            self.changeCurrentAnimation(self.animationNames[random.randint(0, len(self.animationNames)-1)])
         self.prevPos = self.pos
 
         self._shoot()

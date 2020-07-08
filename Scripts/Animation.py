@@ -1,58 +1,47 @@
+import os
 import pygame
-from Scripts.Player import Player
 from Scripts.Vector import Vector
-global animation_frames
-animation_frames = {}
-
-
 
 
 class Animation:
-    def __init__(self):
-        pass
+    def __init__(self, animationPath, frameDelay):
+        self.animationBase = {}
+        self.animationNames = []
+        self.lastFrameTime = 0
+        self.imageIndex = 0
+        self.frameDelay = frameDelay
+        self._load_animations(animationPath)
+        self.currentAnimation = self.animationBase["Idle"]
+        self.currentImage = self.currentAnimation[self.imageIndex]
 
+    def _load_animations(self, path):
+        for animationName in os.listdir(path):
+            self.animationBase.update({animationName : []})
+            self.animationNames.append(animationName)
+            animationPath = os.path.join(path, animationName)
 
-    def load_animation(self, path, frame_time):
-        animation_name = path.split('/')[-1]
-        animation_framse_data = []
-        n = 0
-        for frame in frame_time:
-            animation_frames_id = animation_name + str(n)
-            img_location = path + '/' + animation_frames_id + '.png'
-            animation_image = pygame.image.load(img_location).convert()
-            animation_image.set_colorkey((255,255,255))
-            animation_frames[animation_framse_id] = animation_image.copy()
-            for i in range(frame):
-                animation_framse_data.append(animation_frames_id)
-            n+=1
-            return animation_framse_data
+            for imageName in os.listdir(animationPath):
+                self.animationBase[animationName].append(pygame.image.load(os.path.join(animationPath, imageName)))
 
+    def getImageSize(self):
+        x, y = self.currentImage.get_size()
+        return Vector(x, y)
 
-    def change_action(action_var,frame,new_value):
-        if action_var != new_value:
-            action_var = new_value
-            frame = 0
-        return action_var,frame
-                
-    animation_database['Run'] = load_animation('./resources/PNG/Knight/Run',[7,7,7,7,7,7,7,7]) # ile klatek na każdy obrazek
-    animation_database['Idle'] = load_animation('./resources/PNG/Knight/Idle',[10,10,10,10,10,10,10,10,10,10,10,10]) # ile klatek na każdy obrazek
+    def changeCurrentAnimation(self, animationName):
+        if animationName in self.animationNames:
+            self.currentAnimation = self.animationBase[animationName]
+        else:
+            print("Typo in animationName!!!")
 
+    def animate(self):
+        if pygame.time.get_ticks() - self.lastFrameTime > self.frameDelay:
+            if self.imageIndex < len(self.currentAnimation):
+                self.currentImage = self.currentAnimation[self.imageIndex]
+                self.imageIndex += 1
+            else:
+                self.imageIndex = 0
+            self.lastFrameTime = pygame.time.get_ticks()
 
-    player_action = 'Idle'
-    player_frame = 0
-    player_flip = False
-
-
-    # Wywołanie animacji 
-    if moveDir[0] == 0:
-        player_action,player_frame = change_action(player_action,player_frame,'Idle')
-    if moveDir[0] > 0:
-        player_flip = False
-        player_action,player_frame = change_action(player_action,player_frame,'Run')
-
-    # Miało być flipowanie postaci gdy idzie w innym kierunku xd
-    if moveDir[0] < 0:
-        player_flip = True
-        player_action,player_frame = change_action(player_action,player_frame,'Run')
-
-
+    def printAnimations(self):
+        """returns loaded animations names"""
+        print(self.animationNames)
