@@ -12,7 +12,7 @@ import pygame
 class Player(Entity, Collidable):
     def __init__(self):
         Entity.__init__(self)
-        self.loadImage("./resources/character.png")
+        self.loadImage("./resources/PNG/Knight/knight.png")
         Collidable.__init__(self, box=Vector(self.width, self.height))
         self.jumpTime = 0
         self.jumping = False
