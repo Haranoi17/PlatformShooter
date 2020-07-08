@@ -15,7 +15,7 @@ class Player(Entity, Collidable, Animation):
     def __init__(self):
         Entity.__init__(self)
         self.imageOffset = Vector(20, -20)
-        Animation.__init__(self, "./resources/Animations/Knight/", 300)
+        Animation.__init__(self, "./resources/Animations/Knight/")
         self.width = self.getImageSize().x
         self.height = self.getImageSize().y
         Collidable.__init__(self, box=Vector(self.width-90, self.height-70))

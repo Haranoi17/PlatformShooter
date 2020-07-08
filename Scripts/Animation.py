@@ -4,12 +4,12 @@ from Scripts.Vector import Vector
 
 
 class Animation:
-    def __init__(self, animationPath, frameDelay):
+    def __init__(self, animationPath):
         self.animationBase = {}
         self.animationNames = []
         self.lastFrameTime = 0
         self.imageIndex = 0
-        self.frameDelay = frameDelay
+        self.frameDelay = 200
         self._load_animations(animationPath)
         self.currentAnimation = self.animationBase["Idle"]
         self.currentImage = self.currentAnimation[self.imageIndex]
@@ -30,8 +30,6 @@ class Animation:
     def changeCurrentAnimation(self, animationName):
         if animationName in self.animationNames:
             self.currentAnimation = self.animationBase[animationName]
-        else:
-            print("Typo in animationName!!!")
 
     def animate(self):
         if pygame.time.get_ticks() - self.lastFrameTime > self.frameDelay:

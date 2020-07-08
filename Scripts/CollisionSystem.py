@@ -14,9 +14,6 @@ class Collidable:
         self.bottom = 0
         Collidable.collidables.append(self)
 
-    # def __del__(self):
-    #     Collidable.collidables.remove(self)
-
     def _updatePos(self, pos):
         self.pos = pos
 
