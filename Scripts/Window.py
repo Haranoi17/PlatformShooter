@@ -19,17 +19,18 @@ class Window:
         y = entity.pos.y - entity.height/2
         self.surface.blit(entity.image, (x, y))
 
-    def drawObject(self, object):
-        x = object.pos.x - object.width / 2
-        y = object.pos.y - object.height / 2
-        self.surface.blit(object.image, (x, y))
+    def drawObject(self, Object):
+        x = Object.pos.x - Object.width / 2
+        y = Object.pos.y - Object.height / 2
+        self.surface.blit(Object.image, (x, y))
 
-    def drawText(self, text):
-        label = self.font.render("FPS: " + str(int(text)), 1, (0, 255, 0))
-        self.surface.blit(label, (40, self.height-40))
+    def drawText(self, text, pos=Vector()):
+        label = self.font.render(str(text), 1, (0, 255, 0))
+        self.surface.blit(label, (pos.x, self.height-pos.y))
 
-    def drawHitBox(self, entity):
-        pygame.draw.rect(self.surface, (0, 255, 0), pygame.rect.Rect(entity.pos.x - entity.width/2, entity.pos.y - entity.height/2, entity.width, entity.height), 2)
+    def drawHitBox(self, collidable):
+        pygame.draw.rect(self.surface, (0, 255, 0), pygame.rect.Rect(collidable.pos.x - collidable.box.x/2,
+                                collidable.pos.y - collidable.box.y/2, collidable.box.x, collidable.box.y), 2)
 
     def update(self):
         self._inputBehaviour()
@@ -40,6 +41,9 @@ class Window:
 
     def close(self):
         self.opened = False
+
+    def getSize(self):
+        return self.size
 
     def _inputBehaviour(self):
         if Input.Esc:

@@ -51,3 +51,17 @@ class Input:
 
                 if event.key == pygame.K_SPACE:
                     cls.space = False
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == pygame.BUTTON_LEFT:
+                    cls.mouseLeft = True
+
+                if event.button == pygame.BUTTON_RIGHT:
+                    cls.mouseRight = True
+
+            if event.type == pygame.MOUSEBUTTONUP:
+                if event.button == pygame.BUTTON_LEFT:
+                    cls.mouseLeft = False
+
+                if event.button == pygame.BUTTON_RIGHT:
+                    cls.mouseRight = False

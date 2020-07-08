@@ -14,8 +14,8 @@ class Collidable:
         self.bottom = 0
         Collidable.collidables.append(self)
 
-    def __del__(self):
-        Collidable.collidables.remove(self)
+    # def __del__(self):
+    #     Collidable.collidables.remove(self)
 
     def _updatePos(self, pos):
         self.pos = pos
@@ -33,7 +33,9 @@ class Collidable:
 
     # Checks if collision occured and sends information which side has collided
     def _collisionCheck(self, other):
-        # TODO: it doesnt work properly repair this
+        """This function checks the collision in its impared way then calls _collisionBehaviourDependingOnTypesOfObjects()
+        which serves overloaded behaviour of derived objects"""
+
         if ((other.left < self.right < other.right) or (other.left < self.left < other.right)) and (
                 (other.bottom > self.top > other.top) or (other.bottom > self.bottom > other.top)):
 
@@ -57,11 +59,19 @@ class Collidable:
         self._updateSides()
 
     @classmethod
+    def printAllCollidables(cls):
+        text = ""
+        for collidable in cls.collidables:
+            text += str(type(collidable)) + ","
+        print(text)
+
+    @classmethod
     # This method iterates through all collidable objects and check for collision
     def checkAllCollisions(cls):
         for i in range(len(cls.collidables)):
             for j in range(i + 1, len(cls.collidables)):
-                cls.collidables[i]._collisionCheck(cls.collidables[j])
+                if i in range(len(cls.collidables)) and j in range(len(cls.collidables)):
+                    cls.collidables[i]._collisionCheck(cls.collidables[j])
 
     @classmethod
     # This method prepares objects for next check
@@ -71,3 +81,8 @@ class Collidable:
             item.collisionInfo["Left"] = False
             item.collisionInfo["Top"] = False
             item.collisionInfo["Bottom"] = False
+
+    @classmethod
+    def remove(cls, obj):
+        cls.collidables.remove(obj)
+

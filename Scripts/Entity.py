@@ -6,6 +6,7 @@ import os
 
 class Entity:
     def __init__(self):
+        self.healthPoints = 100
         self.speed = 0.5
         self.pos = Vector()
         self.width = 0
@@ -26,3 +27,9 @@ class Entity:
     def _calculateMoveDirection(self):
         # Returns normalized move direction vector
         pass
+
+    def getDamage(self, amount):
+        if self.healthPoints > 0:
+            self.healthPoints -= amount
+        else:
+            pass
