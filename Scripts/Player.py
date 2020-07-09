@@ -11,7 +11,6 @@ import math
 import pygame
 
 
-
 class Player(Entity, Collidable, Animation):
     def __init__(self):
         Entity.__init__(self)
