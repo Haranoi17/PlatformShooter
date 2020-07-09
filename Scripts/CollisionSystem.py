@@ -14,6 +14,8 @@ class Collidable:
         self.right = 0
         self.top = 0
         self.bottom = 0
+        self.otherReference = None
+        self.collided = False
         Collidable.collidables.append(self)
 
     """Static Functions"""
@@ -31,6 +33,10 @@ class Collidable:
             for j in range(i + 1, len(cls.collidables)):
                 if i in range(len(cls.collidables)) and j in range(len(cls.collidables)):
                     cls.collidables[i]._collisionCheck(cls.collidables[j])
+            cls.collidables[i]._checkIfCollided()
+            if not cls.collidables[i].collided:
+                cls.collidables[i].otherReference = None
+
 
     @classmethod
     # This method prepares objects for next check
@@ -54,6 +60,12 @@ class Collidable:
         self.right = self.pos.x + self.box.x / 2
         self.top = self.pos.y - self.box.y / 2
         self.bottom = self.pos.y + self.box.y / 2
+
+    def _checkIfCollided(self):
+        if self.collisionInfo["Top"] or self.collisionInfo["Bottom"] or self.collisionInfo["Left"] or self.collisionInfo["Right"]:
+            self.collided = True
+        else:
+            self.collided = False
 
     def _collisionBehaviourDependingOnTypesOfObjects(self, other):
         """This function is called in _collisionCheck() and will be overloaded
@@ -79,6 +91,7 @@ class Collidable:
             if other.left < self.left < other.right:
                 self.collisionInfo["Left"] = True
 
+            self.otherReference = other
             self._collisionBehaviourDependingOnTypesOfObjects(other)
 
     """Public functions"""

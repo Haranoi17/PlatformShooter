@@ -6,6 +6,7 @@ from Scripts.CollisionSystem import Collidable
 from Scripts.Platform import Platform
 from Scripts.Bullet import Bullet
 from Engine.FpsCounter import FpsCounter
+from Engine.WorldEditor import WorldEditor
 
 import pygame
 import os
@@ -18,6 +19,7 @@ class Engine:
         pygame.init()
         self.window = Window()
         self.player = Player()
+        self.worldEditor = WorldEditor()
         self.frameRate = FpsCounter(1000)
         self.platforms = []
         self.gravity = 0.000006
@@ -26,14 +28,19 @@ class Engine:
         self.deltaTime = self.stopTime - self.startTime
         self.lastClearTime = pygame.time.get_ticks()
         self._buildPlatforms()
+        self.editWorld = False
 
     """Protected functions"""
     def _serveInput(self):
         Input.checkInputEvents()
+        Input.updateMousePosition()
 
-    def _updateLogic(self):
+    def _calculateCollisions(self):
         Collidable.resetCollisions()
         Collidable.checkAllCollisions()
+
+    def _updateLogic(self):
+        self._calculateCollisions()
 
         for bullet in Bullet.bullets:
             bullet.update(self.deltaTime)
@@ -45,6 +52,9 @@ class Engine:
         self.window.surface.fill((0, 0, 0))
         self.window.drawAnimated(self.player)
         self.window.drawHitBox(self.player)
+
+        if self.editWorld:
+            self.window.drawHitBox(self.worldEditor.mouseCollider)
 
         for bullet in Bullet.bullets:
             self.window.drawObject(bullet)
@@ -72,6 +82,12 @@ class Engine:
     def _debugLog(self):
         pass
 
+    def _wantToEditWorld(self):
+        if Input.Num1 and not self.editWorld:
+            self.editWorld = True
+        if Input.Num2 and self.editWorld:
+            self.editWorld = False
+
     """Public functions"""
     def runGame(self):
         while self.window.isOpen():
@@ -79,7 +95,15 @@ class Engine:
 
             self._debugLog()
             self._serveInput()
-            self._updateLogic()
+
+            self._wantToEditWorld()
+            if self.editWorld:
+                self.worldEditor.editWorld()
+                self._calculateCollisions()
+                self.window.update()
+            else:
+                self._updateLogic()
+
             self._draw()
 
             self._clearRoutine()

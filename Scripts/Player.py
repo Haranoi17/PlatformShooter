@@ -53,8 +53,7 @@ class Player(Entity, Collidable, Animation):
 
     def _calculateMouseRelativePosition(self):
         """Returns normalized direction from character towards mouse cursor"""
-        mouse_x, mouse_y = pygame.mouse.get_pos()  # tuple (x, y)
-        relativeMousePos = Vector(mouse_x - self.pos.x, mouse_y - self.pos.y)
+        relativeMousePos = Vector(Input.mousePos.x - self.pos.x, Input.mousePos.y - self.pos.y)
         return relativeMousePos.normalized()
 
     def _jump(self, deltaTime, gravity):

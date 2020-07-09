@@ -1,4 +1,5 @@
 import pygame
+from Scripts.Vector import Vector
 
 
 class Input:
@@ -10,12 +11,19 @@ class Input:
     space = False
     mouseLeft = False
     mouseRight = False
+    mousePos = Vector()
     Num1 = False
     Num2 = False
     Num3 = False
     Esc = False
 
     """Static functions"""
+
+    @classmethod
+    def updateMousePosition(cls):
+        mousePosX, mousePosY = pygame.mouse.get_pos()
+        cls.mousePos = Vector(mousePosX, mousePosY)
+
     @classmethod
     def checkInputEvents(cls):
         for event in pygame.event.get():
@@ -39,6 +47,15 @@ class Input:
                 if event.key == pygame.K_SPACE:
                     cls.space = True
 
+                if event.key == pygame.K_1:
+                    cls.Num1 = True
+
+                if event.key == pygame.K_2:
+                    cls.Num2 = True
+
+                if event.key == pygame.K_ESCAPE:
+                    cls.Esc = True
+
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_w:
                     cls.up = False
@@ -54,6 +71,15 @@ class Input:
 
                 if event.key == pygame.K_SPACE:
                     cls.space = False
+
+                if event.key == pygame.K_1:
+                    cls.Num1 = False
+
+                if event.key == pygame.K_2:
+                    cls.Num2 = False
+
+                if event.key == pygame.K_ESCAPE:
+                    cls.Esc = False
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == pygame.BUTTON_LEFT:

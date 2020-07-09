@@ -16,7 +16,7 @@ class Bullet(Object, Collidable):
         self.dmg = 5
         self.moveDir = moveDir
         self.box = Vector(10, 10)
-        self.loadImage("./resources/Bullets/bullet.png")
+        self._loadImage("./resources/Bullets/bullet.png")
         Bullet.bullets.append(self)
 
     """Static functions"""
