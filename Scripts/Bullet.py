@@ -4,8 +4,10 @@ from Scripts.Vector import Vector
 
 
 class Bullet(Object, Collidable):
+    """Static members"""
     bullets = []
 
+    """Python predefined class functions"""
     def __init__(self, moveDir, playerImmune, pos):
         Object.__init__(self)
         Collidable.__init__(self, pos)
@@ -17,10 +19,7 @@ class Bullet(Object, Collidable):
         self.loadImage("./resources/Bullets/bullet.png")
         Bullet.bullets.append(self)
 
-    def update(self, deltaTime):
-        self.pos += self.moveDir * deltaTime * self.flySpeed
-        self.updateCollidable(self.pos)
-
+    """Static functions"""
     @classmethod
     def removeOutOfBorder(cls, windowSize=Vector()):
         for bullet in cls.bullets:
@@ -31,3 +30,9 @@ class Bullet(Object, Collidable):
     def remove(cls, bullet):
         Collidable.remove(bullet)
         cls.bullets.remove(bullet)
+
+    """Public functions"""
+    def update(self, deltaTime):
+        self.pos += self.moveDir * deltaTime * self.flySpeed
+        self.updateCollidable(self.pos)
+

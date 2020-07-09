@@ -13,6 +13,7 @@ import random
 
 
 class Engine:
+    """Python predefined class functions"""
     def __init__(self):
         pygame.init()
         self.window = Window()
@@ -26,21 +27,7 @@ class Engine:
         self.lastClearTime = pygame.time.get_ticks()
         self._buildPlatforms()
 
-    def runGame(self):
-        while self.window.isOpen():
-            self.startTime = pygame.time.get_ticks()
-
-            self._debugLog()
-            self._serveInput()
-            self._updateLogic()
-            self._draw()
-
-            self._clearRoutine()
-            self.frameRate.enable()
-
-            self.stopTime = pygame.time.get_ticks()
-            self._deltaTime()
-
+    """Protected functions"""
     def _serveInput(self):
         Input.checkInputEvents()
 
@@ -84,8 +71,20 @@ class Engine:
 
     def _debugLog(self):
         pass
-        #Collidable.printAllCollidables()
-        #print(self.player.healthPoints)
-        #print(Bullet.bullets)
-        # print(self.fpsCounter)
-        # print(f"{self.player.collisionInfo} {self.player.jumpTime}")
+
+    """Public functions"""
+    def runGame(self):
+        while self.window.isOpen():
+            self.startTime = pygame.time.get_ticks()
+
+            self._debugLog()
+            self._serveInput()
+            self._updateLogic()
+            self._draw()
+
+            self._clearRoutine()
+            self.frameRate.enable()
+
+            self.stopTime = pygame.time.get_ticks()
+            self._deltaTime()
+

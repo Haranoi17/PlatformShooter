@@ -12,6 +12,7 @@ import pygame
 
 
 class Player(Entity, Collidable, Animation):
+    """Python predefined class functions"""
     def __init__(self):
         Entity.__init__(self)
         self.imageOffset = Vector(20, -20)
@@ -29,25 +30,7 @@ class Player(Entity, Collidable, Animation):
         self.prevPos = self.pos
         self.gun = Gun()
 
-    # def move(self, deltaTime, moveDir): base entity function is good enough
-
-    def update(self, deltaTime, gravity):
-        self.updateCollidable(self.pos)
-
-        # prevPos has to be written after rising and falling
-        self._jump(deltaTime, gravity)
-        self._fall(deltaTime, gravity)
-        self._isFalling()
-        self._isRising()
-        self.animate()
-        if Input.mouseRight:
-            self.changeCurrentAnimation(self.animationNames[random.randint(0, len(self.animationNames)-1)])
-        self.prevPos = self.pos
-
-        self._shoot()
-        moveDir = self._calculateMoveDirection()
-        self.move(deltaTime, moveDir)
-
+    """Protected Functions"""
     def _shoot(self):
         if Input.mouseLeft:
             self.gun.shoot(self.pos, self, self._calculateMouseRelativePosition())
@@ -61,12 +44,6 @@ class Player(Entity, Collidable, Animation):
 
         if Input.right and self.explicitMoveAllowed:
             moveDir = moveDir + Vector(1, 0)
-
-        # if Input.up and not self.collisionInfo["Top"]:
-        #     moveDir = moveDir + Vector(0, -1)
-
-        # if Input.down and not self.collisionInfo["Bottom"]:
-        #     moveDir = moveDir + Vector(0, 1)
 
         if Input.space and self.collisionInfo["Bottom"] and self.explicitMoveAllowed:
             moveDir = moveDir + Vector(0, -1)
@@ -85,10 +62,6 @@ class Player(Entity, Collidable, Animation):
             self.explicitMoveAllowed = True
             self.jumpTime += deltaTime
             self.pos.y -= 2.5 - gravity * self.jumpTime ** 2
-
-        #if self.collisionInfo["Bottom"] and not self.rising:
-        #     self.jumpTime = 0
-        #     self.jumping = False
 
     def _fall(self, deltaTime, gravity):
         if not self.collisionInfo["Bottom"]:
@@ -120,3 +93,18 @@ class Player(Entity, Collidable, Animation):
             self.getDamage(other.dmg)
             Bullet.remove(other)
 
+    """Public functions"""
+    def update(self, deltaTime, gravity):
+        self.updateCollidable(self.pos)
+
+        # prevPos has to be written after rising and falling
+        self._jump(deltaTime, gravity)
+        self._fall(deltaTime, gravity)
+        self._isFalling()
+        self._isRising()
+        self.animate()
+        self.prevPos = self.pos
+
+        self._shoot()
+        moveDir = self._calculateMoveDirection()
+        self._move(deltaTime, moveDir)

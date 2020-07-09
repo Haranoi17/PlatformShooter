@@ -2,6 +2,7 @@ import pygame
 
 
 class Input:
+    """Static members"""
     up = False
     down = False
     left = False
@@ -14,9 +15,11 @@ class Input:
     Num3 = False
     Esc = False
 
+    """Static functions"""
     @classmethod
     def checkInputEvents(cls):
         for event in pygame.event.get():
+
             if event.type == pygame.QUIT:
                 cls.Esc = True
 
