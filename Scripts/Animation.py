@@ -30,6 +30,7 @@ class Animation:
     def changeCurrentAnimation(self, animationName):
         if animationName in self.animationNames:
             self.currentAnimation = self.animationBase[animationName]
+            self.imageIndex = 0
 
     def animate(self):
         if pygame.time.get_ticks() - self.lastFrameTime > self.frameDelay:
