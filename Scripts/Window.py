@@ -4,6 +4,7 @@ from Scripts.Vector import Vector
 from Scripts.Animation import Animation
 
 class Window:
+    """Python predefined class functions"""
     def __init__(self):
         self.opened = True
         self.background_color = (255, 255, 255)
@@ -14,6 +15,12 @@ class Window:
         self.surface = self.display.set_mode((self.size.x, self.size.y))
         self.font = pygame.font.SysFont("Comic Sans MS", 30)
 
+    """Protected functions"""
+    def _inputBehaviour(self):
+        if Input.Esc:
+            self.opened = False
+
+    """Public functions"""
     def drawEntity(self, entity):
         x = entity.pos.x - entity.width/2
         y = entity.pos.y - entity.height/2
@@ -49,7 +56,3 @@ class Window:
 
     def getSize(self):
         return self.size
-
-    def _inputBehaviour(self):
-        if Input.Esc:
-            self.opened = False

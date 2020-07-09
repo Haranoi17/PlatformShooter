@@ -4,6 +4,7 @@ from Scripts.Vector import Vector
 
 
 class Animation:
+    """Python predefined class functions"""
     def __init__(self, animationPath):
         self.animationBase = {}
         self.animationNames = []
@@ -14,6 +15,7 @@ class Animation:
         self.currentAnimation = self.animationBase["Idle"]
         self.currentImage = self.currentAnimation[self.imageIndex]
 
+    """Protected functions"""
     def _load_animations(self, path):
         for animationName in os.listdir(path):
             self.animationBase.update({animationName : []})
@@ -23,14 +25,15 @@ class Animation:
             for imageName in os.listdir(animationPath):
                 self.animationBase[animationName].append(pygame.image.load(os.path.join(animationPath, imageName)))
 
-    def getImageSize(self):
-        x, y = self.currentImage.get_size()
-        return Vector(x, y)
-
-    def changeCurrentAnimation(self, animationName):
+    def _changeCurrentAnimation(self, animationName):
         if animationName in self.animationNames:
             self.currentAnimation = self.animationBase[animationName]
             self.imageIndex = 0
+
+    """Public functions"""
+    def getImageSize(self):
+        x, y = self.currentImage.get_size()
+        return Vector(x, y)
 
     def animate(self):
         if pygame.time.get_ticks() - self.lastFrameTime > self.frameDelay:
@@ -40,6 +43,11 @@ class Animation:
             else:
                 self.imageIndex = 0
             self.lastFrameTime = pygame.time.get_ticks()
+
+    def updateAnimationBasedOnObjectsLogic(self):
+        """This function will be overwritten in derived classes.
+        It allows to change currently used animation depending on object states"""
+        pass
 
     def printAnimations(self):
         """returns loaded animations names"""
