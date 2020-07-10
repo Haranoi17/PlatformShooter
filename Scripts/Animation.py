@@ -10,7 +10,10 @@ class Animation:
         self.animationNames = []
         self.lastFrameTime = 0
         self.imageIndex = 0
-        self.frameDelay = 200
+        self.frameDelay = 150
+        self.flipped = False
+        self.prevFlipped = False
+        self.flipTrigger = False
         self._load_animations(animationPath)
         self.currentAnimation = self.animationBase["Idle"]
         self.currentImage = self.currentAnimation[self.imageIndex]
@@ -29,6 +32,15 @@ class Animation:
         if animationName in self.animationNames:
             self.currentAnimation = self.animationBase[animationName]
             self.imageIndex = 0
+        else:
+            print("wrong animation name")
+
+    def _shouldFlipImage(self):
+        """Depends on inner state of derived object"""
+        pass
+
+    def _setImageOffset(self):
+        pass
 
     """Public functions"""
     def getImageSize(self):
@@ -36,9 +48,15 @@ class Animation:
         return Vector(x, y)
 
     def animate(self):
-        if pygame.time.get_ticks() - self.lastFrameTime > self.frameDelay:
+        self._shouldFlipImage()
+        if pygame.time.get_ticks() - self.lastFrameTime > self.frameDelay or self.flipTrigger:
             if self.imageIndex < len(self.currentAnimation):
-                self.currentImage = self.currentAnimation[self.imageIndex]
+                if self.flipped:
+                    self.currentImage = pygame.transform.flip(self.currentAnimation[self.imageIndex], True, False)
+                    self._setImageOffset()
+                else:
+                    self.currentImage = self.currentAnimation[self.imageIndex]
+                    self._setImageOffset()
                 self.imageIndex += 1
             else:
                 self.imageIndex = 0

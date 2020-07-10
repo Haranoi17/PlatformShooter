@@ -44,6 +44,7 @@ class Engine:
 
         for bullet in Bullet.bullets:
             bullet.update(self.deltaTime)
+
         self.player.update(self.deltaTime, self.gravity)
 
         self.window.update()
@@ -80,6 +81,7 @@ class Engine:
             self.lastClearTime = pygame.time.get_ticks()
 
     def _debugLog(self):
+        print(self.player.flipped)
         pass
 
     def _wantToEditWorld(self):

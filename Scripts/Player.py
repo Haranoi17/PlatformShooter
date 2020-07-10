@@ -25,31 +25,33 @@ class Player(Entity, Collidable, Animation):
         self.falling = True
         self.rising = False
         self.standing = False
+        self.attacking = False
+        self.moveDir = Vector()
         self.fallTime = 0
         self.explicitMoveAllowed = True
         self.prevPos = self.pos
         self.gun = Gun()
 
     """Protected Functions"""
-    def _shoot(self):
+    def _attack(self):
         if Input.mouseLeft:
             self.gun.shoot(self.pos, self, self._calculateMouseRelativePosition())
 
     def _calculateMoveDirection(self):
         """Returns normalized move direction vector according to buttons pressed"""
-        moveDir = Vector()
+        self.moveDir = Vector()
 
         if Input.left and self.explicitMoveAllowed:
-            moveDir = moveDir + Vector(-1, 0)
+            self.moveDir = self.moveDir + Vector(-1, 0)
 
         if Input.right and self.explicitMoveAllowed:
-            moveDir = moveDir + Vector(1, 0)
+            self.moveDir = self.moveDir + Vector(1, 0)
 
         if Input.space and self.collisionInfo["Bottom"] and self.explicitMoveAllowed:
-            moveDir = moveDir + Vector(0, -1)
+            self.moveDir = self.moveDir + Vector(0, -1)
             self.jumping = True
 
-        return moveDir.normalized()
+        self.moveDir = self.moveDir.normalized()
 
     def _calculateMouseRelativePosition(self):
         """Returns normalized direction from character towards mouse cursor"""
@@ -92,18 +94,40 @@ class Player(Entity, Collidable, Animation):
             self.getDamage(other.dmg)
             Bullet.remove(other)
 
+    def _animationLogic(self):
+        if self.jumping and self.currentAnimation is not self.animationBase["Jump"]:
+            self._changeCurrentAnimation("Jump")
+        if self.standing and self.currentAnimation is not self.animationBase["Idle"]:
+            self._changeCurrentAnimation("Idle")
+
+    def _shouldFlipImage(self):
+        if self.moveDir.x < 0 and not self.flipped:
+            self.flipped = True
+        if self.moveDir.x > 0 and self.flipped:
+            self.flipped = False
+        self.prevFlipped = self.flipped
+
+        self.flipTrigger = True if self.prevFlipped is not self.flipped else False
+
+    def _setImageOffset(self):
+        self.imageOffset = Vector(-20, -20) if self.flipped else Vector(20, -20)
+
     """Public functions"""
     def update(self, deltaTime, gravity):
-        self.updateCollidable(self.pos)
 
+        self.updateCollidable(self.pos)
+        self._calculateMoveDirection()
         # prevPos has to be written after rising and falling
         self._jump(deltaTime, gravity)
         self._fall(deltaTime, gravity)
         self._isFalling()
         self._isRising()
+
+        self._animationLogic()
         self.animate()
+
         self.prevPos = self.pos
 
-        self._shoot()
-        moveDir = self._calculateMoveDirection()
-        self._move(deltaTime, moveDir)
+        self._attack()
+
+        self._move(deltaTime, self.moveDir)
