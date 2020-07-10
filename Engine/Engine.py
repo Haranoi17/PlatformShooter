@@ -52,18 +52,19 @@ class Engine:
     def _draw(self):
         self.window.surface.fill((0, 0, 0))
         self.window.drawAnimated(self.player)
-        self.window.drawHitBox(self.player)
+       # self.window.drawHitBox(self.player)
 
         if self.editWorld:
-            self.window.drawHitBox(self.worldEditor.mouseCollider)
+            pass
+           # self.window.drawHitBox(self.worldEditor.mouseCollider)
 
         for bullet in Bullet.bullets:
             self.window.drawObject(bullet)
-            self.window.drawHitBox(bullet)
+           # self.window.drawHitBox(bullet)
 
         for platform in self.platforms:
             self.window.drawObject(platform)
-            self.window.drawHitBox(platform)
+            # self.window.drawHitBox(platform)
 
         self.window.drawText(self.frameRate, Vector(40,40))
 
@@ -81,7 +82,7 @@ class Engine:
             self.lastClearTime = pygame.time.get_ticks()
 
     def _debugLog(self):
-        print(self.player.flipped)
+        #print(self.player.flipped)
         pass
 
     def _wantToEditWorld(self):

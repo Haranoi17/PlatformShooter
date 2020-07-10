@@ -13,13 +13,14 @@ import pygame
 
 class Player(Entity, Collidable, Animation):
     """Python predefined class functions"""
+
     def __init__(self):
         Entity.__init__(self)
         self.imageOffset = Vector(20, -20)
         Animation.__init__(self, "./resources/Animations/Knight/")
         self.width = self.getImageSize().x
         self.height = self.getImageSize().y
-        Collidable.__init__(self, box=Vector(self.width-90, self.height-70))
+        Collidable.__init__(self, box=Vector(self.width - 90, self.height - 70))
         self.jumpTime = 0
         self.jumping = False
         self.falling = True
@@ -33,8 +34,10 @@ class Player(Entity, Collidable, Animation):
         self.gun = Gun()
 
     """Protected Functions"""
+
     def _attack(self):
         if Input.mouseLeft:
+            self.attacking = True
             self.gun.shoot(self.pos, self, self._calculateMouseRelativePosition())
 
     def _calculateMoveDirection(self):
@@ -95,24 +98,48 @@ class Player(Entity, Collidable, Animation):
             Bullet.remove(other)
 
     def _animationLogic(self):
-        if self.jumping and self.currentAnimation is not self.animationBase["Jump"]:
-            self._changeCurrentAnimation("Jump")
-        if self.standing and self.currentAnimation is not self.animationBase["Idle"]:
-            self._changeCurrentAnimation("Idle")
+        if not self.attacking:
+            if self.jumping and self.currentAnimation is not self.animationBase["Jump"]:
+                self.frameDelay = 100
+                self._changeCurrentAnimation("Jump")
+            elif self.standing and self.currentAnimation != self.animationBase["Walk"] and self.moveDir.x:
+                self.frameDelay = 100
+                self._changeCurrentAnimation("Walk")
+            elif self.standing and self.currentAnimation is not self.animationBase["Idle"] and not self.moveDir.x:
+                self.frameDelay = 200
+                self._changeCurrentAnimation("Idle")
+
+        if self.attacking and self.currentAnimation is not self.animationBase["Attack"]:
+            self.frameDelay = 50
+            self._changeCurrentAnimation("Attack")
+
+        if self.attacking and self.imageIndex == len(self.animationBase["Attack"]):
+            self.attacking = False
+        if self.currentAnimation is self.animationBase["Walk"] and self.imageIndex == len(self.animationBase["Walk"]):
+            self.imageIndex = 2
+
 
     def _shouldFlipImage(self):
-        if self.moveDir.x < 0 and not self.flipped:
-            self.flipped = True
-        if self.moveDir.x > 0 and self.flipped:
-            self.flipped = False
-        self.prevFlipped = self.flipped
 
+        if not self.attacking:
+            if self._calculateMouseRelativePosition().x < 0 and not self.flipped:
+                self.flipped = True
+            if self._calculateMouseRelativePosition().x > 0 and self.flipped:
+                self.flipped = False
+
+            if self.moveDir.x < 0 and not self.flipped:
+                self.flipped = True
+            if self.moveDir.x > 0 and self.flipped:
+                self.flipped = False
+
+        self.prevFlipped = self.flipped
         self.flipTrigger = True if self.prevFlipped is not self.flipped else False
 
     def _setImageOffset(self):
         self.imageOffset = Vector(-20, -20) if self.flipped else Vector(20, -20)
 
     """Public functions"""
+
     def update(self, deltaTime, gravity):
 
         self.updateCollidable(self.pos)
