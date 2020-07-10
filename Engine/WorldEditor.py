@@ -12,7 +12,9 @@ class WorldEditor:
     # treatment?
     mouseCollider = Collidable(Input.mousePos, Vector(2, 2))
     """Python predefined class functions"""
-    # none
+    def __init__(self):
+        self.wantEditWorld = False
+
 
     """Static functions"""
     @classmethod
@@ -26,15 +28,17 @@ class WorldEditor:
     def _moveObject(self, gameObject=Collidable()):
         gameObject.updateCollidable(Input.mousePos)
 
-
-
     """Public functions"""
     def editWorld(self):
         self._updateMouseCollider()
-        #print(self.mouseCollider.otherReference)
         if self.mouseCollider.otherReference and Input.mouseLeft:
             self._moveObject(self.mouseCollider.otherReference)
 
+    def wantToEditWorld(self):
+        if Input.Num1 and not self.wantEditWorld:
+            self.wantEditWorld = True
+        if Input.Num2 and self.wantEditWorld:
+            self.wantEditWorld = False
 
 
 

@@ -122,9 +122,7 @@ class Player(Entity, Collidable, Animation):
         if self.currentAnimation is self.animationBase["Jump"] and self.imageIndex == len(self.animationBase["Jump"])-1:
             self.imageIndex = len(self.animationBase["Jump"])-2
 
-
     def _shouldFlipImage(self):
-
         if not self.attacking:
             if self._calculateMouseRelativePosition().x < 0 and not self.flipped:
                 self.flipped = True

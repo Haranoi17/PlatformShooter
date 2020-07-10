@@ -16,6 +16,7 @@ import random
 
 class Engine:
     """Python predefined class functions"""
+
     def __init__(self):
         pygame.init()
         self.window = Window()
@@ -28,8 +29,10 @@ class Engine:
         self.deltaTime = self.stopTime - self.startTime
         self.lastClearTime = pygame.time.get_ticks()
         self.editWorld = False
+        self.drawHitbox = False
 
     """Protected functions"""
+
     def _serveInput(self):
         Input.checkInputEvents()
         Input.updateMousePosition()
@@ -50,25 +53,26 @@ class Engine:
     def _draw(self):
         self.window.surface.fill((0, 0, 0))
         self.window.drawAnimated(self.world.player)
-        self.window.drawHitBox(self.world.player)
+        if self.drawHitbox:
+            self.window.drawHitBox(self.world.player)
 
-        if self.editWorld:
+        if self.editWorld and self.drawHitbox:
             self.window.drawHitBox(self.worldEditor.mouseCollider)
 
         for bullet in Bullet.bullets:
             self.window.drawObject(bullet)
-            self.window.drawHitBox(bullet)
+            if self.drawHitbox:
+                self.window.drawHitBox(bullet)
 
         for platform in self.world.platforms:
             self.window.drawObject(platform)
-            self.window.drawHitBox(platform)
+            if self.drawHitbox:
+                self.window.drawHitBox(platform)
 
-        self.window.drawText(self.frameRate, Vector(40,40))
+        self.window.drawText(self.frameRate, Vector(40, 40))
 
     def _deltaTime(self):
         self.deltaTime = self.stopTime - self.startTime
-
-
 
     def _clearRoutine(self):
         """This method will clear unnecessary stuff like invisible bullets once in a while"""
@@ -79,13 +83,8 @@ class Engine:
     def _debugLog(self):
         pass
 
-    def _wantToEditWorld(self):
-        if Input.Num1 and not self.editWorld:
-            self.editWorld = True
-        if Input.Num2 and self.editWorld:
-            self.editWorld = False
-
     """Public functions"""
+
     def runGame(self):
         while self.window.isOpen():
             self.startTime = pygame.time.get_ticks()
@@ -93,8 +92,8 @@ class Engine:
             self._debugLog()
             self._serveInput()
 
-            self._wantToEditWorld()
-            if self.editWorld:
+            self.worldEditor.wantToEditWorld()
+            if self.worldEditor.wantEditWorld:
                 if Input.mouseLeft and Input.mouseRight:
                     self.world.saveWorld()
                 if Input.mouseLeft and Input.down and Input.up:
@@ -113,4 +112,3 @@ class Engine:
 
             self.stopTime = pygame.time.get_ticks()
             self._deltaTime()
-
