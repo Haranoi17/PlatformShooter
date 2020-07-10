@@ -4,12 +4,12 @@ from Scripts.Vector import Vector
 from Scripts.Animation import Animation
 
 class Window:
+    width = 1280
+    height = 720
     """Python predefined class functions"""
     def __init__(self):
         self.opened = True
         self.background_color = (255, 255, 255)
-        self.width = 1280
-        self.height = 720
         self.size = Vector(self.width, self.height)
         self.display = pygame.display
         self.surface = self.display.set_mode((self.size.x, self.size.y))

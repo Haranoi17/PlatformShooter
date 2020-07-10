@@ -9,7 +9,6 @@ class Platform(Object, Collidable):
         Object.__init__(self)
         self._loadImage("./resources/World/grass-platform.png")
         Collidable.__init__(self, box=Vector(self.width, self.height))
-
         self.updateCollidable(pos)
 
     def __str__(self):

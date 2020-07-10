@@ -6,6 +6,7 @@ from Scripts.Platform import Platform
 from Scripts.Gun import Gun
 from Scripts.Bullet import Bullet
 from Scripts.Animation import Animation
+from Scripts.Window import Window
 import random
 import math
 import pygame
@@ -159,5 +160,12 @@ class Player(Entity, Collidable, Animation):
         self.prevPos = self.pos
 
         self._attack()
+
+        if self.pos.y > Window.height:
+            self.pos.y = -self.height
+        if self.pos.x < -self.width:
+            self.pos.x = Window.width
+        if self.pos.x > Window.width:
+            self.pos.x = -self.width
 
         self._move(deltaTime, self.moveDir)

@@ -45,7 +45,6 @@ class Engine:
             bullet.update(self.deltaTime)
 
         self.world.player.update(self.deltaTime, self.gravity)
-
         self.window.update()
 
     def _draw(self):
@@ -98,10 +97,11 @@ class Engine:
             if self.editWorld:
                 if Input.mouseLeft and Input.mouseRight:
                     self.world.saveWorld()
-                if Input.mouseLeft and Input.mouseRight and Input.up:
+                if Input.mouseLeft and Input.down and Input.up:
                     self.world.loadWorld()
-                self.worldEditor.editWorld()
                 self._calculateCollisions()
+                self.worldEditor.editWorld()
+
                 self.window.update()
             else:
                 self._updateLogic()

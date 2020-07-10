@@ -8,7 +8,7 @@ class Entity:
     """Python predefined class functions"""
     def __init__(self):
         self.healthPoints = 100
-        self.speed = 0.5
+        self.speed = 0.2
         self.pos = Vector()
         self.imageOffset = Vector()
         self.width = 0

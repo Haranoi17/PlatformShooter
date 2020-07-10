@@ -6,9 +6,18 @@ from Scripts.Vector import Vector
 
 
 class WorldEditor:
+    # I dont understand why moving objects using mouseCollider does work only when this collider is static...
+    # When I put it as a member variable it doesnt work... it works only on bullets which is impossibly weird since
+    # all collidable derived are being saved in the same static array of collidable class. Why bullets have got extra
+    # treatment?
+    mouseCollider = Collidable(Input.mousePos, Vector(2, 2))
     """Python predefined class functions"""
-    def __init__(self):
-        self.mouseCollider = Collidable(Input.mousePos, Vector(2, 2))
+    # none
+
+    """Static functions"""
+    @classmethod
+    def _updateMouseCollider(cls):
+        cls.mouseCollider.updateCollidable(Input.mousePos)
 
     """Protected functions"""
     def _addPlatformAtPosition(self, pos):
@@ -17,8 +26,7 @@ class WorldEditor:
     def _moveObject(self, gameObject=Collidable()):
         gameObject.updateCollidable(Input.mousePos)
 
-    def _updateMouseCollider(self):
-        self.mouseCollider.updateCollidable(Input.mousePos)
+
 
     """Public functions"""
     def editWorld(self):
