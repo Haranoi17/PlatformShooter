@@ -7,6 +7,7 @@ from Scripts.Platform import Platform
 from Scripts.Bullet import Bullet
 from Engine.FpsCounter import FpsCounter
 from Engine.WorldEditor import WorldEditor
+from Engine.World import World
 
 import pygame
 import os
@@ -18,16 +19,14 @@ class Engine:
     def __init__(self):
         pygame.init()
         self.window = Window()
-        self.player = Player()
+        self.world = World()
         self.worldEditor = WorldEditor()
         self.frameRate = FpsCounter(1000)
-        self.platforms = []
         self.gravity = 0.000006
         self.startTime = 0.0
         self.stopTime = pygame.time.get_ticks()
         self.deltaTime = self.stopTime - self.startTime
         self.lastClearTime = pygame.time.get_ticks()
-        self._buildPlatforms()
         self.editWorld = False
 
     """Protected functions"""
@@ -45,35 +44,32 @@ class Engine:
         for bullet in Bullet.bullets:
             bullet.update(self.deltaTime)
 
-        self.player.update(self.deltaTime, self.gravity)
+        self.world.player.update(self.deltaTime, self.gravity)
 
         self.window.update()
 
     def _draw(self):
         self.window.surface.fill((0, 0, 0))
-        self.window.drawAnimated(self.player)
-       # self.window.drawHitBox(self.player)
+        self.window.drawAnimated(self.world.player)
+        self.window.drawHitBox(self.world.player)
 
         if self.editWorld:
-            pass
-           # self.window.drawHitBox(self.worldEditor.mouseCollider)
+            self.window.drawHitBox(self.worldEditor.mouseCollider)
 
         for bullet in Bullet.bullets:
             self.window.drawObject(bullet)
-           # self.window.drawHitBox(bullet)
+            self.window.drawHitBox(bullet)
 
-        for platform in self.platforms:
+        for platform in self.world.platforms:
             self.window.drawObject(platform)
-            # self.window.drawHitBox(platform)
+            self.window.drawHitBox(platform)
 
         self.window.drawText(self.frameRate, Vector(40,40))
 
     def _deltaTime(self):
         self.deltaTime = self.stopTime - self.startTime
 
-    def _buildPlatforms(self):
-        for i in range(10):
-            self.platforms.append(Platform(Vector(random.random() * 1000, random.random() * 500)))
+
 
     def _clearRoutine(self):
         """This method will clear unnecessary stuff like invisible bullets once in a while"""
@@ -82,7 +78,6 @@ class Engine:
             self.lastClearTime = pygame.time.get_ticks()
 
     def _debugLog(self):
-        #print(self.player.flipped)
         pass
 
     def _wantToEditWorld(self):
@@ -101,6 +96,10 @@ class Engine:
 
             self._wantToEditWorld()
             if self.editWorld:
+                if Input.mouseLeft and Input.mouseRight:
+                    self.world.saveWorld()
+                if Input.mouseLeft and Input.mouseRight and Input.up:
+                    self.world.loadWorld()
                 self.worldEditor.editWorld()
                 self._calculateCollisions()
                 self.window.update()

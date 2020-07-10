@@ -18,6 +18,9 @@ class Collidable:
         self.collided = False
         Collidable.collidables.append(self)
 
+    def __str__(self):
+        return f"{self.pos}"
+
     """Static Functions"""
     @classmethod
     def printAllCollidables(cls):

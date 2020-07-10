@@ -7,9 +7,8 @@ from Scripts.Vector import Vector
 
 class WorldEditor:
     """Python predefined class functions"""
-    def __init__(self, world=World()):
-        self.world = world
-        self.mouseCollider = Collidable(Input.mousePos, Vector(1, 1))
+    def __init__(self):
+        self.mouseCollider = Collidable(Input.mousePos, Vector(2, 2))
 
     """Protected functions"""
     def _addPlatformAtPosition(self, pos):
@@ -24,8 +23,10 @@ class WorldEditor:
     """Public functions"""
     def editWorld(self):
         self._updateMouseCollider()
+        #print(self.mouseCollider.otherReference)
         if self.mouseCollider.otherReference and Input.mouseLeft:
             self._moveObject(self.mouseCollider.otherReference)
+
 
 
 

@@ -94,6 +94,7 @@ class Player(Entity, Collidable, Animation):
             self.explicitMoveAllowed = False
 
         if isinstance(other, Bullet) and not other.playerImmune == self:
+            self.explicitMoveAllowed = True
             self.getDamage(other.dmg)
             Bullet.remove(other)
 
@@ -115,8 +116,10 @@ class Player(Entity, Collidable, Animation):
 
         if self.attacking and self.imageIndex == len(self.animationBase["Attack"]):
             self.attacking = False
-        if self.currentAnimation is self.animationBase["Walk"] and self.imageIndex == len(self.animationBase["Walk"]):
+        if self.currentAnimation is self.animationBase["Walk"] and self.imageIndex == len(self.animationBase["Walk"])-1:
             self.imageIndex = 2
+        if self.currentAnimation is self.animationBase["Jump"] and self.imageIndex == len(self.animationBase["Jump"])-1:
+            self.imageIndex = len(self.animationBase["Jump"])-2
 
 
     def _shouldFlipImage(self):
