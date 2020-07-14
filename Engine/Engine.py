@@ -29,7 +29,7 @@ class Engine:
         self.deltaTime = self.stopTime - self.startTime
         self.lastClearTime = pygame.time.get_ticks()
         self.editWorld = False
-        self.drawHitbox = False
+        self.drawHitbox = True
 
     """Protected functions"""
 
@@ -111,4 +111,5 @@ class Engine:
             self.frameRate.enable()
 
             self.stopTime = pygame.time.get_ticks()
+
             self._deltaTime()

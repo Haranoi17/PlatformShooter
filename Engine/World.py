@@ -7,19 +7,20 @@ import os
 
 
 class World:
-    platforms = []
+
     """Python predefined class functions"""
     def __init__(self):
         self.worldsPath = "./resources/World/"
         self.canWrite = True
-        self.loading = {"Platforms": False, "End": False}
+        self.loadMark = None
         self.player = Player()
+        self.platforms = []
         self._buildPlatforms()
 
     """Protected functions"""
     def _buildPlatforms(self):
         for i in range(20):
-            World.platforms.append(Platform(Vector(random.random() * 1000, random.random() * 600)))
+            self.platforms.append(Platform(Vector(random.random() * 1000, random.random() * 600)))
 
 
     def _checkSaveAgreement(self, filename):
@@ -32,39 +33,50 @@ class World:
         if self.canWrite:
             with open(os.path.join(self.worldsPath, filename), "w") as file:
                 print("saving platforms")
-                file.write("Platforms")
+                file.write("Platforms\n")
+
                 for platform in self.platforms:
-                    file.write(f"{platform.pos.x} {platform.pos.y}")
+                    file.write(f"{platform.pos.x} {platform.pos.y}\n")
 
                 file.write("End")
+                print("Successfully saved world!")
         else:
             print(f"No agreement on writing to file named: {filename}")
 
     def _readWorldFromFile(self, filename):
         with open(os.path.join(self.worldsPath, filename), "r") as file:
+            print("Destroying current world")
+            self._clearWorld()
+
             print("World loading")
-            for line in file.readline():
+            for line in file.readlines():
                 if self._checkMark(line):
                     continue
 
-                if self.loading["Platforms"]:
-                    posX = line.split(" ")[0]
-                    posY = line.split(" ")[1]
+                if "Platforms" in self.loadMark:
+                    posX = float(line.split(" ")[0])
+                    posY = float(line.split(" ")[1])
                     self.platforms.append(Platform(pos=Vector(posX, posY)))
+            print("World Loaded!")
+
+    def _checkMark(self, line=str()):
+        if "Platforms" in line:
+            self.loadMark = "Platforms"
+            return True
+        elif "End" in line:
+            self.loadMark = "End"
+            return True
+        else:
+            return False
 
 
+    def _removeAllPlatforms(self):
+        for platform in self.platforms:
+            Collidable.remove(platform)
+        self.platforms.clear()
 
-    def _checkMark(self, line):
-        isThereMark = False
-        if line == "Platforms":
-            self.loading["Platforms"] = True
-            isThereMark = True
-        elif line == "End":
-            self.loading["Platforms"] = False
-            print("Loading ended successfully!")
-            isThereMark = True
-        return isThereMark
-
+    def _clearWorld(self):
+        self._removeAllPlatforms()
 
     """Public functions"""
     def saveWorld(self):

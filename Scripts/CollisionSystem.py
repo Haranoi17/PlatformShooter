@@ -14,7 +14,7 @@ class Collidable:
         self.right = 0
         self.top = 0
         self.bottom = 0
-        self.otherReference = None
+        self.other = None
         self.collided = False
         Collidable.collidables.append(self)
 
@@ -38,7 +38,7 @@ class Collidable:
                     cls.collidables[i]._collisionCheck(cls.collidables[j])
             cls.collidables[i]._checkIfCollided()
             if not cls.collidables[i].collided:
-                cls.collidables[i].otherReference = None
+                cls.collidables[i].other = None
 
 
     @classmethod
@@ -70,7 +70,7 @@ class Collidable:
         else:
             self.collided = False
 
-    def _collisionBehaviourDependingOnTypesOfObjects(self, other):
+    def _collisionBehaviourDependingOnTypesOfObjects(self):
         """This function is called in _collisionCheck() and will be overloaded
         if additional behaviour is needed in derived classes"""
         pass
@@ -94,8 +94,8 @@ class Collidable:
             if other.left < self.left < other.right:
                 self.collisionInfo["Left"] = True
 
-            self.otherReference = other
-            self._collisionBehaviourDependingOnTypesOfObjects(other)
+            self.other = other
+            self._collisionBehaviourDependingOnTypesOfObjects()
 
     """Public functions"""
     def updateCollidable(self, pos):

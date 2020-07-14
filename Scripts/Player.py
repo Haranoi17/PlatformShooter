@@ -80,8 +80,8 @@ class Player(Entity, Collidable, Animation):
     def _isFalling(self):
         self.falling = True if self.prevPos.y < self.pos.y else False
 
-    def _collisionBehaviourDependingOnTypesOfObjects(self, other):
-        if isinstance(other, Platform):
+    def _collisionBehaviourDependingOnTypesOfObjects(self):
+        if isinstance(self.other, Platform):
             self.explicitMoveAllowed = True
             if self.collisionInfo["Bottom"] and not self.rising:
                 self.falling = False
@@ -89,15 +89,16 @@ class Player(Entity, Collidable, Animation):
                 self.fallTime = 0
                 self.jumpTime = 0
                 self.standing = True
+                self.pos.y = self.other.pos.y - self.box.y/2
             else:
                 self.standing = False
         else:
             self.explicitMoveAllowed = False
 
-        if isinstance(other, Bullet) and not other.playerImmune == self:
+        if isinstance(self.other, Bullet) and not self.other.playerImmune == self:
             self.explicitMoveAllowed = True
-            self.getDamage(other.dmg)
-            Bullet.remove(other)
+            self.getDamage(self.other.dmg)
+            Bullet.remove(self.other)
 
     def _animationLogic(self):
         if not self.attacking:

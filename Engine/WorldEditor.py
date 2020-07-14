@@ -31,8 +31,10 @@ class WorldEditor:
     """Public functions"""
     def editWorld(self):
         self._updateMouseCollider()
-        if self.mouseCollider.otherReference and Input.mouseLeft:
-            self._moveObject(self.mouseCollider.otherReference)
+        if self.mouseCollider.other and Input.mouseLeft:
+            self._moveObject(self.mouseCollider.other)
+        if not self.mouseCollider.collided:
+            self.other = None
 
     def wantToEditWorld(self):
         if Input.Num1 and not self.wantEditWorld:
