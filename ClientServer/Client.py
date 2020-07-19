@@ -1,6 +1,6 @@
 import socket
 from ClientServer.Constants import *
-
+import time
 
 class Client:
     def __init__(self):
@@ -15,24 +15,31 @@ class Client:
     def send(self, message=""):
         if len(message) > MESSAGE_SIZE:
             print("Too big message. Sending terminated.")
-            return
+            return False
 
         if len(message) < MESSAGE_SIZE:
             paddingSize = MESSAGE_SIZE - len(message)
-            message += " " * paddingSize
+            message += PADDING_CHARACTER * paddingSize
 
         self.socket.send(message.encode(ENCODING))
+        return True
 
     def receive(self):
         message = self.socket.recv(MESSAGE_SIZE).decode(ENCODING)
         print(message)
 
+
 client = Client()
 
 client.connect((socket.gethostbyname(socket.gethostname()), 5050))
 
-client.send("Za duza wiadomosc -----------------------------------------------------------------------------------------------------------------------------")
+sent = client.send("Za duza wiadomosc -----------------------------------------------------------------------------------------------------------------------------")
 
-client.receive()
+time.sleep(1)
 
+if sent:
+    client.receive()
+
+time.sleep(1)
 client.disconnect()
+time.sleep(1)

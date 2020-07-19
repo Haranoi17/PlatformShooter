@@ -26,24 +26,27 @@ class Server:
         while connected:
             message = self.receive(conn)
             if message:
+                message = message.strip(PADDING_CHARACTER)
                 print(f"[{addr}] {message}")
                 self.sendToClient(conn, "Data Received")
                 if message == DISCONNECT_MESSAGE:
+                    print("closing")
                     connected = False
         conn.close()
 
     def sendToClient(self, connection, message=""):
         if len(message) > MESSAGE_SIZE:
             print("Too big message. Sending terminated.")
-            return
+            return False
 
         if len(message) < MESSAGE_SIZE:
             paddingSize = MESSAGE_SIZE - len(message)
             message += " " * paddingSize
 
         connection.send(message.encode(ENCODING))
+        return True
 
-    def receive(self, connection):
+    def receive(self, connection) -> str:
         message = connection.recv(MESSAGE_SIZE).decode(ENCODING)
         return message
 
