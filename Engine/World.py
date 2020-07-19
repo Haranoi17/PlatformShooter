@@ -60,6 +60,7 @@ class World:
             print("World Loaded!")
 
     def _checkMark(self, line=str()):
+        """Returns True to indicate that mark is in current line and lets us skip one line to data of given object"""
         if "Platforms" in line:
             self.loadMark = "Platforms"
             return True
