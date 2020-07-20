@@ -9,6 +9,8 @@ from Engine.FpsCounter import FpsCounter
 from Engine.WorldEditor import WorldEditor
 from Engine.World import World
 
+from ClientServer import Server
+
 import pygame
 import os
 import random

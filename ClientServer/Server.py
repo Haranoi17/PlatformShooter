@@ -11,17 +11,17 @@ class Server:
         self.socket.bind((self.ip, self.port))
         print("Server started!")
 
-    def listen(self):
+    def listen(self) -> None:
         self.socket.listen()
         print("Listening for connections...")
 
-    def accept(self):
+    def accept(self) -> None:
         conn, addr = self.socket.accept()
         print(f"something connected! {addr}")
         thread = threading.Thread(target=Server.handleClient, args=(self, conn, addr))
         thread.start()
 
-    def handleClient(self, conn, addr):
+    def handleClient(self, conn, addr) -> None:
         connected = True
         while connected:
             message = self.receive(conn)
@@ -34,7 +34,7 @@ class Server:
                     connected = False
         conn.close()
 
-    def sendToClient(self, connection, message=""):
+    def sendToClient(self, connection, message="") -> bool:
         if len(message) > MESSAGE_SIZE:
             print("Too big message. Sending terminated.")
             return False
@@ -50,9 +50,3 @@ class Server:
         message = connection.recv(MESSAGE_SIZE).decode(ENCODING)
         return message
 
-
-server = Server()
-
-server.listen()
-
-server.accept()
