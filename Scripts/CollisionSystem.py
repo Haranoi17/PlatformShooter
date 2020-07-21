@@ -40,7 +40,6 @@ class Collidable:
             if not cls.collidables[i].collided:
                 cls.collidables[i].other = None
 
-
     @classmethod
     # This method prepares objects for next check
     def resetCollisions(cls):
@@ -81,7 +80,6 @@ class Collidable:
 
         if ((other.left < self.right < other.right) or (other.left < self.left < other.right)) and (
                 (other.bottom > self.top > other.top) or (other.bottom > self.bottom > other.top)):
-
             if other.top < self.bottom < other.bottom:
                 self.collisionInfo["Bottom"] = True
 

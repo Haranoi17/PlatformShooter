@@ -9,6 +9,10 @@ class Client:
     def connect(self, address=()):
         self.socket.connect(address)
 
+    def connectToLocalHost(self):
+        address = (socket.gethostbyname(socket.gethostname()), PORT)
+        self.socket.connect(address)
+
     def disconnect(self):
         self.send(DISCONNECT_MESSAGE)
 

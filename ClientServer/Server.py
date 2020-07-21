@@ -5,6 +5,7 @@ import threading
 
 class Server:
     def __init__(self):
+        self.accepting = True
         self.ip = socket.gethostbyname(socket.gethostname())
         self.port = PORT
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -16,23 +17,25 @@ class Server:
         print("Listening for connections...")
 
     def accept(self) -> None:
-        conn, addr = self.socket.accept()
-        print(f"something connected! {addr}")
-        thread = threading.Thread(target=Server.handleClient, args=(self, conn, addr))
-        thread.start()
+        while self.accepting:
+            conn, addr = self.socket.accept()
+            print(f"something connected! {addr}")
+            thread = threading.Thread(target=self.handleClient, args=(conn, addr))
+            thread.start()
 
     def handleClient(self, conn, addr) -> None:
-        connected = True
-        while connected:
-            message = self.receive(conn)
-            if message:
-                message = message.strip(PADDING_CHARACTER)
-                print(f"[{addr}] {message}")
-                self.sendToClient(conn, "Data Received")
-                if message == DISCONNECT_MESSAGE:
-                    print("closing")
-                    connected = False
-        conn.close()
+        pass
+        # connected = True
+        # while connected:
+        #     message = self.receive(conn)
+        #     if message:
+        #         message = message.strip(PADDING_CHARACTER)
+        #         print(f"[{addr}] {message}")
+        #         self.sendToClient(conn, "Data Received")
+        #         if message == DISCONNECT_MESSAGE:
+        #             print("closing")
+        #             connected = False
+        # conn.close()
 
     def sendToClient(self, connection, message="") -> bool:
         if len(message) > MESSAGE_SIZE:

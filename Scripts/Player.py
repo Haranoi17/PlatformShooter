@@ -15,7 +15,7 @@ import pygame
 class Player(Entity, Collidable, Animation):
     """Python predefined class functions"""
 
-    def __init__(self):
+    def __init__(self, ID=None):
         Entity.__init__(self)
         self.imageOffset = Vector(20, -20)
         Animation.__init__(self, "./resources/Animations/Knight/")
@@ -34,6 +34,10 @@ class Player(Entity, Collidable, Animation):
         self.prevPos = self.pos
         self.gun = Gun()
 
+        self.ID = ID
+
+    def __str__(self):
+        return f"pos:{self.pos} left:{self.left}"
     """Protected Functions"""
 
     def _attack(self):
@@ -145,6 +149,7 @@ class Player(Entity, Collidable, Animation):
 
     def update(self, deltaTime, gravity):
 
+        # self.input.update() input will be changed by remote controll messages
         self.updateCollidable(self.pos)
         self._calculateMoveDirection()
         # prevPos has to be written after rising and falling

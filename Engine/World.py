@@ -7,21 +7,20 @@ import os
 
 
 class World:
-
+    platforms = []
     """Python predefined class functions"""
     def __init__(self):
         self.worldsPath = "./resources/World/"
         self.canWrite = True
         self.loadMark = None
-        self.player = Player()
-        self.platforms = []
+        self.players = []
+
         self._buildPlatforms()
 
     """Protected functions"""
     def _buildPlatforms(self):
-        for i in range(20):
-            self.platforms.append(Platform(Vector(random.random() * 1000, random.random() * 600)))
-
+        for i in range(1):
+            self.platforms.append(Platform(Vector(100, 200)))
 
     def _checkSaveAgreement(self, filename):
         if filename in os.listdir("./resources/World"):

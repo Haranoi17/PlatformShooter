@@ -8,7 +8,7 @@ from Scripts.Bullet import Bullet
 from Engine.FpsCounter import FpsCounter
 from Engine.WorldEditor import WorldEditor
 from Engine.World import World
-
+import threading
 from ClientServer import Server
 
 import pygame
@@ -19,14 +19,17 @@ import random
 class Engine:
     """Python predefined class functions"""
 
-    def __init__(self):
+    def __init__(self, hasWindow=True):
         pygame.init()
-        self.window = Window()
+        self.hasWindow = hasWindow
+        if self.hasWindow:
+            self.window = Window()
         self.world = World()
         self.worldEditor = WorldEditor()
         self.frameRate = FpsCounter(1000)
-        self.gravity = 0.000006
+        self.gravity = 0.000000000000000006
         self.startTime = 0.0
+        self.player = Player(1)
         self.stopTime = pygame.time.get_ticks()
         self.deltaTime = self.stopTime - self.startTime
         self.lastClearTime = pygame.time.get_ticks()
@@ -35,28 +38,36 @@ class Engine:
 
     """Protected functions"""
 
-    def _serveInput(self):
-        Input.checkInputEvents()
-        Input.updateMousePosition()
-
     def _calculateCollisions(self):
         Collidable.resetCollisions()
         Collidable.checkAllCollisions()
+        print(self.player.collisionInfo)
 
     def _updateLogic(self):
+        Input.updateMousePosition()
+        Input.checkInputEvents()
         self._calculateCollisions()
 
         for bullet in Bullet.bullets:
             bullet.update(self.deltaTime)
 
-        self.world.player.update(self.deltaTime, self.gravity)
-        self.window.update()
+        for platform in self.world.platforms:
+            platform.updateCollidable(platform.pos)
+
+        for player in self.world.players:
+            player.update(self.deltaTime, self.gravity)
+
+        self.player.update(self.deltaTime, self.gravity)
+        if self.hasWindow:
+            self.window.update()
 
     def _draw(self):
         self.window.surface.fill((0, 0, 0))
-        self.window.drawAnimated(self.world.player)
-        if self.drawHitbox:
-            self.window.drawHitBox(self.world.player)
+        for player in self.world.players:
+            self.window.drawAnimated(player)
+            if self.drawHitbox:
+                self.window.drawHitBox(player)
+
 
         if self.editWorld and self.drawHitbox:
             self.window.drawHitBox(self.worldEditor.mouseCollider)
@@ -71,6 +82,8 @@ class Engine:
             if self.drawHitbox:
                 self.window.drawHitBox(platform)
 
+        self.window.drawAnimated(self.player)
+        self.window.drawHitBox(self.player)
         self.window.drawText(self.frameRate, Vector(40, 40))
 
     def _deltaTime(self):
@@ -79,7 +92,7 @@ class Engine:
     def _clearRoutine(self):
         """This method will clear unnecessary stuff like invisible bullets once in a while"""
         if pygame.time.get_ticks() - self.lastClearTime > 500:
-            Bullet.removeOutOfBorder(self.window.getSize())
+            Bullet.removeOutOfBorder(Vector(1920, 1080))
             self.lastClearTime = pygame.time.get_ticks()
 
     def _debugLog(self):
@@ -87,12 +100,36 @@ class Engine:
 
     """Public functions"""
 
+    def movePlayer(self, ID=str, moveDir=Vector):
+        for player in self.world.players:
+            if str(player.ID) == ID:
+                player.moveDir = moveDir
+
+    def registerPlayer(self, ID):
+        self.world.players.append(Player(ID))
+
+    def updateServer(self):
+        self.startTime = pygame.time.get_ticks()
+        self._updateLogic()
+
+        self._draw()
+
+        self.frameRate.enable()
+        self._clearRoutine()
+        self.stopTime = pygame.time.get_ticks()
+        self._deltaTime()
+
+    def updateClient(self):
+        self._updateLogic()
+        self._draw()
+        self.window.update()
+        self.frameRate.enable()
+
     def runGame(self):
         while self.window.isOpen():
             self.startTime = pygame.time.get_ticks()
 
             self._debugLog()
-            self._serveInput()
 
             self.worldEditor.wantToEditWorld()
             if self.worldEditor.wantEditWorld:

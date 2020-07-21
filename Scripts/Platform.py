@@ -12,4 +12,4 @@ class Platform(Object, Collidable):
         self.updateCollidable(pos)
 
     def __str__(self):
-        return "Platform"
+        return f"pos:{self.pos} right:{self.right}"
