@@ -30,11 +30,11 @@ class Collidable:
         print(text)
 
     @classmethod
-    # This method iterates through all collidable objects and check for collision
     def checkAllCollisions(cls):
+        """This method iterates through all collidable objects and check for collision"""
         for i in range(len(cls.collidables)):
-            for j in range(i + 1, len(cls.collidables)):
-                if i in range(len(cls.collidables)) and j in range(len(cls.collidables)):
+            for j in range(len(cls.collidables)):
+                if i in range(len(cls.collidables)) and j in range(len(cls.collidables)) and i != j:
                     cls.collidables[i]._collisionCheck(cls.collidables[j])
             cls.collidables[i]._checkIfCollided()
             if not cls.collidables[i].collided:
@@ -92,7 +92,9 @@ class Collidable:
             if other.left < self.left < other.right:
                 self.collisionInfo["Left"] = True
 
+            other.other = self
             self.other = other
+            other._collisionBehaviourDependingOnTypesOfObjects()
             self._collisionBehaviourDependingOnTypesOfObjects()
 
     """Public functions"""

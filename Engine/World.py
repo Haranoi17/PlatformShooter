@@ -19,7 +19,7 @@ class World:
 
     """Protected functions"""
     def _buildPlatforms(self):
-        for i in range(1):
+        for i in range(20):
             self.platforms.append(Platform(Vector(100, 200)))
 
     def _checkSaveAgreement(self, filename):

@@ -13,7 +13,7 @@ class GameClient(Client):
         self.ID = None
         self.GameEngine = Engine()
 
-        self.connectToLocalHost()
+        self.connect(("haranoi18.ddns.net", 5050))
         self.receiveID()
 
         self.getServerInfoThread = threading.Thread(target=self.getGameStateFromServer, args=())
@@ -24,7 +24,7 @@ class GameClient(Client):
         self.updateClient()
 
     def getGameStateFromServer(self):
-        while self.running:
+        while self.GameEngine.window.isOpen():
             message = self.socket.recv(MESSAGE_SIZE).decode(ENCODING)
             if message:
                 message = message.strip(PADDING_CHARACTER)
@@ -36,14 +36,15 @@ class GameClient(Client):
 
     def sendInput(self):
         while self.running:
-            inputMessage = ""
-            if Input.left:
-                inputMessage += PLAYER_MOVE + LEFT
-            if Input.right:
-                inputMessage += PLAYER_MOVE + RIGHT
+            if Input.right or Input.left:
+                inputMessage = PLAYER_ID + self.ID
+                if Input.left:
+                    inputMessage += PLAYER_MOVE + LEFT
+                if Input.right:
+                    inputMessage += PLAYER_MOVE + RIGHT
 
-            if inputMessage:
-                self.send(inputMessage)
+                if inputMessage:
+                    self.send(inputMessage)
 
     def receiveID(self):
         message = self.socket.recv(MESSAGE_SIZE).decode(ENCODING)

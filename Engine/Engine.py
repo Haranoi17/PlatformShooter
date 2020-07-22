@@ -27,9 +27,8 @@ class Engine:
         self.world = World()
         self.worldEditor = WorldEditor()
         self.frameRate = FpsCounter(1000)
-        self.gravity = 0.000000000000000006
+        self.gravity = 0.0000006
         self.startTime = 0.0
-        self.player = Player(1)
         self.stopTime = pygame.time.get_ticks()
         self.deltaTime = self.stopTime - self.startTime
         self.lastClearTime = pygame.time.get_ticks()
@@ -41,11 +40,13 @@ class Engine:
     def _calculateCollisions(self):
         Collidable.resetCollisions()
         Collidable.checkAllCollisions()
-        print(self.player.collisionInfo)
 
-    def _updateLogic(self):
+    def _serveInput(self):
         Input.updateMousePosition()
         Input.checkInputEvents()
+
+    def _updateLogic(self):
+        self._serveInput()
         self._calculateCollisions()
 
         for bullet in Bullet.bullets:
@@ -57,7 +58,6 @@ class Engine:
         for player in self.world.players:
             player.update(self.deltaTime, self.gravity)
 
-        self.player.update(self.deltaTime, self.gravity)
         if self.hasWindow:
             self.window.update()
 
@@ -67,7 +67,6 @@ class Engine:
             self.window.drawAnimated(player)
             if self.drawHitbox:
                 self.window.drawHitBox(player)
-
 
         if self.editWorld and self.drawHitbox:
             self.window.drawHitBox(self.worldEditor.mouseCollider)
@@ -82,8 +81,6 @@ class Engine:
             if self.drawHitbox:
                 self.window.drawHitBox(platform)
 
-        self.window.drawAnimated(self.player)
-        self.window.drawHitBox(self.player)
         self.window.drawText(self.frameRate, Vector(40, 40))
 
     def _deltaTime(self):
@@ -102,22 +99,23 @@ class Engine:
 
     def movePlayer(self, ID=str, moveDir=Vector):
         for player in self.world.players:
-            if str(player.ID) == ID:
+            if player.ID == ID:
                 player.moveDir = moveDir
 
     def registerPlayer(self, ID):
         self.world.players.append(Player(ID))
 
     def updateServer(self):
-        self.startTime = pygame.time.get_ticks()
-        self._updateLogic()
+        while True:
+            self.startTime = pygame.time.get_ticks()
+            self._updateLogic()
 
-        self._draw()
+            self._draw()
 
-        self.frameRate.enable()
-        self._clearRoutine()
-        self.stopTime = pygame.time.get_ticks()
-        self._deltaTime()
+            self.frameRate.enable()
+            self._clearRoutine()
+            self.stopTime = pygame.time.get_ticks()
+            self._deltaTime()
 
     def updateClient(self):
         self._updateLogic()

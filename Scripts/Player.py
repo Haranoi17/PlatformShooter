@@ -21,7 +21,7 @@ class Player(Entity, Collidable, Animation):
         Animation.__init__(self, "./resources/Animations/Knight/")
         self.width = self.getImageSize().x
         self.height = self.getImageSize().y
-        Collidable.__init__(self, box=Vector(self.width - 90, self.height - 70))
+        Collidable.__init__(self, pos=Vector(40, 20), box=Vector(self.width - 90, self.height - 70))
         self.jumpTime = 0
         self.jumping = False
         self.falling = True
@@ -56,7 +56,6 @@ class Player(Entity, Collidable, Animation):
             self.moveDir = self.moveDir + Vector(1, 0)
 
         if Input.space and self.collisionInfo["Bottom"] and self.explicitMoveAllowed:
-            self.moveDir = self.moveDir + Vector(0, -1)
             self.jumping = True
 
         self.moveDir = self.moveDir.normalized()
@@ -151,7 +150,7 @@ class Player(Entity, Collidable, Animation):
 
         # self.input.update() input will be changed by remote controll messages
         self.updateCollidable(self.pos)
-        self._calculateMoveDirection()
+        # self._calculateMoveDirection()
         # prevPos has to be written after rising and falling
         self._jump(deltaTime, gravity)
         self._fall(deltaTime, gravity)
@@ -172,4 +171,5 @@ class Player(Entity, Collidable, Animation):
         if self.pos.x > Window.width:
             self.pos.x = -self.width
 
-        self._move(deltaTime, self.moveDir)
+        self.move(deltaTime, self.moveDir)
+        self.moveDir=Vector()

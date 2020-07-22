@@ -8,9 +8,10 @@ import time
 
 
 class GameServer(Server):
+    GameEngine = Engine(hasWindow=True)
     def __init__(self):
         Server.__init__(self)
-        self.GameEngine = Engine(hasWindow=True)
+
         self.isRunning = True
         self.activeConnectionsData = []
         self.availableIDs = {str(x): True for x in range(0, 10)}
@@ -24,9 +25,8 @@ class GameServer(Server):
         # self.connectionThread = threading.Thread(target=GameServer.serverLoop, args=(self,))
 
     def updateGameLogic(self):
-        while self.isRunning:
-            self.GameEngine.updateServer()
-            #self.sendGameState()
+        self.GameEngine.updateServer()
+        #self.sendGameState()
 
     def sendGameState(self):
         for client in self.activeConnectionsData:
@@ -77,9 +77,6 @@ class GameServer(Server):
             moveValueIndex = message.find(PLAYER_MOVE) + len(PLAYER_MOVE)
             moveDir = Vector(1, 0) if message[moveValueIndex] == RIGHT else Vector(-1, 0)
             self.GameEngine.movePlayer(ID, moveDir)
-            print(f"moving player {ID} in direction {moveDir}")
-        else:
-            self.GameEngine.movePlayer(ID, Vector(0, 0))
 
         return True
 
@@ -87,4 +84,3 @@ class GameServer(Server):
         self.gameLogicThread.join()
         print("Terminating server")
         exit()
-

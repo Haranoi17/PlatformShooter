@@ -14,12 +14,13 @@ class WorldEditor:
     """Python predefined class functions"""
     def __init__(self):
         self.wantEditWorld = False
+        self.mouseCollider = Collidable(box=Vector(2,2))
 
 
     """Static functions"""
-    # @classmethod
-    # def _updateMouseCollider(cls):
-    #     cls.mouseCollider.updateCollidable(Input.mousePos)
+    @classmethod
+    def _updateMouseCollider(cls):
+        cls.mouseCollider.updateCollidable(Input.mousePos)
 
     """Protected functions"""
     def _addPlatformAtPosition(self, pos):
@@ -34,7 +35,7 @@ class WorldEditor:
         if self.mouseCollider.other and Input.mouseLeft:
             self._moveObject(self.mouseCollider.other)
         if not self.mouseCollider.collided:
-            self.other = None
+            self.mouseCollider.other = None
 
     def wantToEditWorld(self):
         if Input.Num1 and not self.wantEditWorld:
