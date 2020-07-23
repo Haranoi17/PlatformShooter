@@ -94,3 +94,10 @@ class Input:
 
                 if event.button == pygame.BUTTON_RIGHT:
                     cls.mouseRight = False
+
+    @classmethod
+    def detected(cls):
+        if cls.space or cls.right or cls.left:
+            return True
+        else:
+            return False

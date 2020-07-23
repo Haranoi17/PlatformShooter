@@ -9,6 +9,7 @@ import time
 
 class GameServer(Server):
     GameEngine = Engine(hasWindow=True)
+
     def __init__(self):
         Server.__init__(self)
 
@@ -26,7 +27,7 @@ class GameServer(Server):
 
     def updateGameLogic(self):
         self.GameEngine.updateServer()
-        #self.sendGameState()
+        # self.sendGameState()
 
     def sendGameState(self):
         for client in self.activeConnectionsData:
@@ -46,7 +47,6 @@ class GameServer(Server):
             if message:
                 message = message.strip(PADDING_CHARACTER)
                 connected = self.handleMessage(message)
-                print(message)
 
         self.activeConnectionsData.remove(connectionData)
         self.releaseID(clientID)
@@ -67,16 +67,30 @@ class GameServer(Server):
 
     def handleMessage(self, message) -> bool:
         """Returns True if connection is still up and False when connetion is getting closed"""
-        idIndex = message.find(PLAYER_ID) + len(PLAYER_ID)
-        ID = message[idIndex]  # string
+        if message:
+            idIndex = message.find(PLAYER_ID) + len(PLAYER_ID)
+            ID = None
+            if idIndex < len(message):
+                ID = message[idIndex]  # string
 
-        if DISCONNECT_MESSAGE in message:
-            return False
+            if DISCONNECT_MESSAGE in message:
+                return False
 
-        if PLAYER_MOVE in message:
-            moveValueIndex = message.find(PLAYER_MOVE) + len(PLAYER_MOVE)
-            moveDir = Vector(1, 0) if message[moveValueIndex] == RIGHT else Vector(-1, 0)
-            self.GameEngine.movePlayer(ID, moveDir)
+            if PLAYER_MOVE in message:
+                moveValueIndex = message.find(PLAYER_MOVE) + len(PLAYER_MOVE)
+                moveDir = Vector()
+
+                if message[moveValueIndex] == RIGHT:
+                    moveDir = Vector(1, 0)
+                elif message[moveValueIndex] == LEFT:
+                    moveDir = Vector(-1, 0)
+                elif message[moveValueIndex] == STOP:
+                    moveDir = Vector()
+
+                self.GameEngine.movePlayer(ID, moveDir=moveDir)
+
+            if PLAYER_JUMP in message:
+                self.GameEngine.jumpPlayer(ID)
 
         return True
 

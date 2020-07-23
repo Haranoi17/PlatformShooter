@@ -97,10 +97,17 @@ class Engine:
 
     """Public functions"""
 
+    def jumpPlayer(self, ID=str):
+        for player in self.world.players:
+            if player.ID == ID:
+                player.jumping = True
+
     def movePlayer(self, ID=str, moveDir=Vector):
         for player in self.world.players:
             if player.ID == ID:
                 player.moveDir = moveDir
+                # print(f"{player.moveDir}, {moveDir}")
+
 
     def registerPlayer(self, ID):
         self.world.players.append(Player(ID))
@@ -119,8 +126,8 @@ class Engine:
 
     def updateClient(self):
         self._updateLogic()
-        self._draw()
-        self.window.update()
+        # self._draw()
+        # self.window.update()
         self.frameRate.enable()
 
     def runGame(self):

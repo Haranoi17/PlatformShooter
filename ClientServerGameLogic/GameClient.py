@@ -4,6 +4,7 @@ from Engine.Engine import Engine
 from ClientServerGameLogic.GameMessages import *
 from Scripts.Input import Input
 import threading
+import time
 
 
 class GameClient(Client):
@@ -13,7 +14,8 @@ class GameClient(Client):
         self.ID = None
         self.GameEngine = Engine()
 
-        self.connect(("haranoi18.ddns.net", 5050))
+        # self.connect(("haranoi18.ddns.net", 5050))
+        self.connectToLocalHost()
         self.receiveID()
 
         self.getServerInfoThread = threading.Thread(target=self.getGameStateFromServer, args=())
@@ -28,23 +30,33 @@ class GameClient(Client):
             message = self.socket.recv(MESSAGE_SIZE).decode(ENCODING)
             if message:
                 message = message.strip(PADDING_CHARACTER)
-                print(message)
 
     def updateClient(self):
         while self.running:
             self.GameEngine.updateClient()
 
     def sendInput(self):
+        isLeftRightSent = False
         while self.running:
-            if Input.right or Input.left:
-                inputMessage = PLAYER_ID + self.ID
+            inputMessage = ""
+            if (Input.right or Input.left) and not isLeftRightSent:
                 if Input.left:
+                    inputMessage = PLAYER_ID + self.ID
                     inputMessage += PLAYER_MOVE + LEFT
-                if Input.right:
+                elif Input.right:
+                    inputMessage = PLAYER_ID + self.ID
                     inputMessage += PLAYER_MOVE + RIGHT
+                isLeftRightSent = True
+            elif isLeftRightSent and not (Input.right or Input.left):
+                inputMessage = PLAYER_ID + self.ID
+                inputMessage += PLAYER_MOVE + STOP
+                isLeftRightSent = False
+            if Input.space:
+                inputMessage = PLAYER_ID + self.ID
+                inputMessage += PLAYER_JUMP
 
-                if inputMessage:
-                    self.send(inputMessage)
+            if inputMessage:
+                self.send(inputMessage)
 
     def receiveID(self):
         message = self.socket.recv(MESSAGE_SIZE).decode(ENCODING)
@@ -53,6 +65,8 @@ class GameClient(Client):
 
     def closeClient(self):
         self.getServerInfoThread.join()
+        self.sendInputThread.join()
+        self.running = False
 
 
 

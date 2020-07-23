@@ -38,6 +38,7 @@ class Player(Entity, Collidable, Animation):
 
     def __str__(self):
         return f"pos:{self.pos} left:{self.left}"
+
     """Protected Functions"""
 
     def _attack(self):
@@ -92,7 +93,7 @@ class Player(Entity, Collidable, Animation):
                 self.fallTime = 0
                 self.jumpTime = 0
                 self.standing = True
-                self.pos.y = self.other.pos.y - self.box.y/2
+                self.pos.y = self.other.pos.y - self.box.y / 2
             else:
                 self.standing = False
         else:
@@ -121,10 +122,12 @@ class Player(Entity, Collidable, Animation):
 
         if self.attacking and self.imageIndex == len(self.animationBase["Attack"]):
             self.attacking = False
-        if self.currentAnimation is self.animationBase["Walk"] and self.imageIndex == len(self.animationBase["Walk"])-1:
+        if self.currentAnimation is self.animationBase["Walk"] and self.imageIndex == len(
+                self.animationBase["Walk"]) - 1:
             self.imageIndex = 2
-        if self.currentAnimation is self.animationBase["Jump"] and self.imageIndex == len(self.animationBase["Jump"])-1:
-            self.imageIndex = len(self.animationBase["Jump"])-2
+        if self.currentAnimation is self.animationBase["Jump"] and self.imageIndex == len(
+                self.animationBase["Jump"]) - 1:
+            self.imageIndex = len(self.animationBase["Jump"]) - 2
 
     def _shouldFlipImage(self):
         if not self.attacking:
@@ -172,4 +175,3 @@ class Player(Entity, Collidable, Animation):
             self.pos.x = -self.width
 
         self.move(deltaTime, self.moveDir)
-        self.moveDir=Vector()

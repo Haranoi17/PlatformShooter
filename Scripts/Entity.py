@@ -29,9 +29,9 @@ class Entity:
         self.width, self.height = self.image.get_size()
 
     """Public functions"""
-    def move(self, deltaTime, moveDir):
+    def move(self, deltaTime, moveDir=Vector()):
         """Changes entities position"""
-        self.pos = self.pos + moveDir * deltaTime * self.speed
+        self.pos += moveDir * deltaTime * self.speed
 
     def update(self, deltaTime, gravity):
         pass
